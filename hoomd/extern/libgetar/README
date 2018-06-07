@@ -1,0 +1,20 @@
+Information on installation and common issues can be found in the
+manual, which is located in the doc subdirectory and can also be found
+at http://glotzerlab.engin.umich.edu/libgetar/ or
+https://bitbucket.org/glotzer/libgetar/downloads .
+
+libgetar uses portions of the lz4 project, located at
+http://www.lz4.org/ . Its code and license are located in the lz4
+subdirectory.
+
+libgetar uses portions of the vogl project, located at
+https://github.com/ValveSoftware/vogl . Its code and license are
+located in the vogl_miniz subdirectory.
+
+Changelog:
+
+- v0.5.0: experimental directory backend, experimental java API, gtar.{read,cat} modules, removed experimental HDF5 backend
+- v0.4.0: sqlite backend, small API changes
+- v0.3.0: GTAR.writeRecord(), gtar.Record.__repr__(), gtar.copy, GTAR.close()
+- v0.2.0: GTAR.{read,write}Path(), archive name schema change, build fixes
+- v0.1.0: Basic functionality

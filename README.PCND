@@ -1,0 +1,5 @@
+The CPU plugin appears to work (needs to be tested), but the GPU plugin compiles but errors when run. Will just calcualte on CPU during a GPU run. This is okay for nanoparticles, but will be prohibitively slow when applying ot polymers. 
+
+Installed in /home/andrew/code/hoomd-installs/hoomd-blue_pluginCPUworking_NoGPU/lib/python/
+
+cmake ../ -DCMAKE_INSTALL_PREFIX='/home/andrew/code/hoomd-installs/hoomd-blue_pluginCPUworking_NoGPU/lib/python/' -DDISABLE_SQLITE=ON -DBUILD_CGCMM=OFF -DBUILD_HPMC=OFF -DBUILD_METAL=OFF -DBUILD_TESTING=OFF -DENABLE_CUDA=ON -DSINGLE_PRECISION=ON -DENABLE_HPMC_MIXED_PRECISION=OFF -DBUILD_DEM=OFF
