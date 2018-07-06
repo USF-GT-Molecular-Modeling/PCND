@@ -107,6 +107,13 @@ void CGCMMAngleForceComputeGPU::setParams(unsigned int type, Scalar K, Scalar t_
     
     curandCreateGenerator(&gen,CURAND_RNG_PSEUDO_DEFAULT);
     curandSetPseudoRandomGeneratorSeed(gen,time(NULL));
+    
+    //allocate space to carryover data
+    /* Allocate n floats on host */
+    seed2=7*(eps+1)
+    hostCarryover = (float *)calloc(seed2, sizeof(float));
+    /* Allocate n floats on device */
+    cudaMalloc((void **)&devCarryover, seed2*sizeof(float));
                 
     }
 
@@ -169,7 +176,8 @@ void CGCMMAngleForceComputeGPU::computeForces(unsigned int timestep)
                                    m_exec_conf->getComputeCapability(),
                                    timestep,
                                    devData,
-                                   PCNDtimestep);
+                                   PCNDtimestep,
+                                   devCarryover);
     PCNDtimestep=PCNDtimestep+1;
 
     if(m_exec_conf->isCUDAErrorCheckingEnabled())

@@ -34,6 +34,7 @@ cudaError_t gpu_compute_CGCMM_angle_forces(Scalar4* d_force,
                                            const unsigned int compute_capability,
                                            unsigned int timestep,
                                            float *hostData,
-                                           int PCNDtimestep);
+                                           int PCNDtimestep,
+                                           float *hostCarryover);
 
 #endif
