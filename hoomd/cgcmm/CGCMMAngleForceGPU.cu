@@ -78,7 +78,8 @@ extern "C" __global__ void gpu_compute_CGCMM_angle_forces_kernel(Scalar4* d_forc
 		
 		// loop over all angles
 		for (int angle_idx = 0; angle_idx < n_angles; angle_idx++)
-			{
+		{
+			int cur_angle_abc = apos_list[pitch*angle_idx + idx];
 			if (cur_angle_abc ==1)
 			{
 				counter += 1;
@@ -89,7 +90,7 @@ extern "C" __global__ void gpu_compute_CGCMM_angle_forces_kernel(Scalar4* d_forc
 				//int cur_angle_y_idx = cur_angle.idx[1];
 				int cur_angle_type = cur_angle.idx[2];
 
-				int cur_angle_abc = apos_list[pitch*angle_idx + idx];
+				
 
 				
 				// get the angle parameters (MEM TRANSFER: 8 bytes)
@@ -215,9 +216,8 @@ extern "C" __global__ void gpu_compute_CGCMM_angle_forces_kernel(Scalar4* d_forc
 					//printf("\n\ntimestep = %i\nforce = %f\n",timestep,force_idx.x);
 					//printf("\n\ntimestep = %i\ncurangle_abc = %i\nidx = %i\nxidx = %i\nyidx = %i\nR1 = %f\nR2 = %f\nR3 = %f\nR4 = %f\nR5 = %f\nR6 = %f\nforce=%f",timestep,cur_angle_abc,idx,cur_angle_x_idx,cur_angle_y_idx,R1,R2,R3,R4,R5,R6,force_idx.x);
 					//printf("\ntimestep = %i\ncurangle_abc = %i\nidx = %i\nxidx = %i\nyidx = %i\nR1 = %i\nR2 = %i\nR3 = %i\nR4 = %i\nR5 = %i\nR6 = %i\n",timestep,cur_angle_abc,idx,cur_angle_x_idx,cur_angle_y_idx,R1,R2,R3,R4,R5,R6);
-					}
-				d_force[idx] = force_idx;
 				}
+				d_force[idx] = force_idx;
 			}
 		}
 	}
@@ -263,7 +263,8 @@ cudaError_t gpu_compute_CGCMM_angle_forces(Scalar4* d_force,
                                            const unsigned int compute_capability,
                                            unsigned int timestep,
                                            float *devData,
-                                           int PCNDtimestep)
+                                           int PCNDtimestep,
+                                           float *devCarryover)
     {
     assert(d_params);
     assert(d_CGCMMsr);
@@ -321,7 +322,8 @@ cudaError_t gpu_compute_CGCMM_angle_forces(Scalar4* d_force,
                                                               d_CGCMMepow,
                                                               timestep,
                                                               devData,
-                                                              PCNDtimestep);
+                                                              PCNDtimestep,
+                                                              devCarryover);
 
     return cudaSuccess;
     }

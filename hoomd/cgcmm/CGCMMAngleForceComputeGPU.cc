@@ -16,8 +16,9 @@
 #include <time.h>
 
 curandGenerator_t gen;
-float *devData, *hostData;
+float *devData, *hostData, *devCarryover, *hostCarryover;
 int seed;
+int seed2;
 int PCNDtimestep;
 
 namespace py = pybind11;
@@ -110,7 +111,7 @@ void CGCMMAngleForceComputeGPU::setParams(unsigned int type, Scalar K, Scalar t_
     
     //allocate space to carryover data
     /* Allocate n floats on host */
-    seed2=7*(eps+1)
+    seed2=7*(eps+1);
     hostCarryover = (float *)calloc(seed2, sizeof(float));
     /* Allocate n floats on device */
     cudaMalloc((void **)&devCarryover, seed2*sizeof(float));
