@@ -104,7 +104,7 @@ class cgcmm(force._force):
             cgcmm.set_coeff('cg96', k=100.0, t0=1.0, exponents='LJ9-6', epsilon=9.0, sigma=0.3)
 
         """
-        hoomd.util.print_status_line();
+        #hoomd.util.print_status_line();
         cg_type=0
 
         # set the parameters for the appropriate type

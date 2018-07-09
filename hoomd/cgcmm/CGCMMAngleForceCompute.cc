@@ -129,6 +129,7 @@ void CGCMMAngleForceCompute::setParams(unsigned int type, Scalar K, Scalar t_0, 
     m_rcut[type] = my_rcut;
 
     // check for some silly errors a user could make
+    /*
     if (cg_type > 3)
         m_exec_conf->msg->warning() << "angle.cgcmm: Unrecognized exponents specified" << endl;
     if (K <= 0)
@@ -139,6 +140,7 @@ void CGCMMAngleForceCompute::setParams(unsigned int type, Scalar K, Scalar t_0, 
         m_exec_conf->msg->warning() << "angle.cgcmm: specified eps <= 0" << endl;
     if (sigma <= 0)
         m_exec_conf->msg->warning() << "angle.cgcmm: specified sigma <= 0" << endl;
+        */
     }
 
 /*! CGCMMAngleForceCompute provides

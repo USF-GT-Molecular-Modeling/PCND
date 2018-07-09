@@ -83,6 +83,7 @@ extern "C" __global__ void gpu_compute_CGCMM_angle_forces_kernel(Scalar4* d_forc
 			if (cur_angle_abc ==1)
 			{
 				counter += 1;
+				//printf("forcew=%f\n",force_idx.w);
 				////////////////////////////////////////////////////////////Get params
 				group_storage<3> cur_angle = alist[pitch*angle_idx + idx];
 
@@ -90,7 +91,10 @@ extern "C" __global__ void gpu_compute_CGCMM_angle_forces_kernel(Scalar4* d_forc
 				//int cur_angle_y_idx = cur_angle.idx[1];
 				int cur_angle_type = cur_angle.idx[2];
 
-				
+				if (idx==70 && timestep<10)
+				{
+					//printf("forcew1=%f\n",force_idx.w);
+				}
 
 				
 				// get the angle parameters (MEM TRANSFER: 8 bytes)
@@ -138,6 +142,12 @@ extern "C" __global__ void gpu_compute_CGCMM_angle_forces_kernel(Scalar4* d_forc
 				//printf("\ntimestep = %i  idx = %i   state = %i    R1 = %f   R6 = %f\n",timestep,idx,&state,R1,R6);
 
 				
+				if (idx==70 && timestep<10)
+				{
+					//printf("forcew2=%f\n",force_idx.w);
+				}
+
+				
 				if (PCNDtimestep == 0)
 				{
 					devCarryover[(number)*6+counter*3]=Xi*sqrt(-2*log(R1))*cosf(2*3.1415926535897*R2);
@@ -149,13 +159,17 @@ extern "C" __global__ void gpu_compute_CGCMM_angle_forces_kernel(Scalar4* d_forc
 					force_idx.y +=devCarryover[(number)*6+1+counter*3];
 					force_idx.z +=devCarryover[(number)*6+2+counter*3];
 					//printf("\n\nSTARING\nidx.x = %f\nidx = %i\n\n",force_idx.x,idx);
-					force_idx.w += sqrt(force_idx.x*force_idx.x+force_idx.y*force_idx.y+force_idx.z*force_idx.z);
+					//force_idx.w += sqrt(force_idx.x*force_idx.x+force_idx.y*force_idx.y+force_idx.z*force_idx.z);
 					
 					
 					//printf("\n\ntimestep = %i\nforce = %f\n",timestep,force_idx.x);
 					//printf("\n\ntimestep = %i\ncurangle_abc = %i\nidx = %i\nxidx = %i\nyidx = %i\nR1 = %f\nR2 = %f\nR3 = %f\nR4 = %f\nR5 = %f\nR6 = %f\nforce=%f",timestep,cur_angle_abc,idx,cur_angle_x_idx,cur_angle_y_idx,R1,R2,R3,R4,R5,R6,force_idx.x);
 					//printf("\ntimestep = %i\ncurangle_abc = %i\nidx = %i\nxidx = %i\nyidx = %i\nR1 = %i\nR2 = %i\nR3 = %i\nR4 = %i\nR5 = %i\nR6 = %i\n",timestep,cur_angle_abc,idx,cur_angle_x_idx,cur_angle_y_idx,R1,R2,R3,R4,R5,R6);
-					
+					/*if (idx==70 && timestep==2)
+					{
+						printf("forcew=%f\n",force_idx.w);
+					}*/
+
 				}
 				else if (PCNDtimestep != 0)
 				{
@@ -189,6 +203,24 @@ extern "C" __global__ void gpu_compute_CGCMM_angle_forces_kernel(Scalar4* d_forc
 						hz=-Xi*sqrt(-2*log(0.001));
 					}
 					
+					if (idx==70 && timestep<10)
+					{
+						Scalar carryx=devCarryover[(number)*6+0+counter*3];
+						Scalar carryy=devCarryover[(number)*6+1+counter*3];
+						Scalar carryz=devCarryover[(number)*6+2+counter*3];
+						
+						
+						printf("timestep = %i magx=%f carryover=%f counter=%i, hx=%f, R1=%f, R2=%f\n",timestep,magx,carryx,counter,hx,R1,R2);
+						printf("timestep = %i magy=%f carryover=%f counter=%i, hy=%f, R3=%f, R4=%f\n",timestep,magy,carryy,counter,hy,R3,R4);
+						printf("timestep = %i magz=%f carryover=%f counter=%i, hz=%f, R5=%f, R6=%f\n",timestep,magz,carryz,counter,hz,R5,R6);
+						printf("forcex=%f forcey=%f forcez=%f counter=%i\n",force_idx.x,force_idx.y,force_idx.z,counter);
+					} 
+					if (idx==70 && timestep<10)
+					{
+						//printf("forcew3=%f\n",force_idx.w);
+					}
+
+					
 					devCarryover[(number)*6+counter*3]=E*magx+hx;
 					devCarryover[(number)*6+1+counter*3]=E*magy+hy;
 					devCarryover[(number)*6+2+counter*3]=E*magz+hz;
@@ -198,7 +230,7 @@ extern "C" __global__ void gpu_compute_CGCMM_angle_forces_kernel(Scalar4* d_forc
 					force_idx.z +=devCarryover[(number)*6+2+counter*3];
 					//if (idx==0)
 					//printf("\ntimestep = %i  idx = %i  magx = %f  R1 = %f  R2 = %f  E = %f  hx = %f  force_x = %f\n",timestep,idx,magx,R1,R2,E,hx,force_idx.x);
-					force_idx.w += sqrt(force_idx.x*force_idx.x+force_idx.y*force_idx.y+force_idx.z*force_idx.z);
+					
 					//force_idx.w=force_idx.x;
 					//if (timestep%100==0)
 					//{
@@ -216,9 +248,22 @@ extern "C" __global__ void gpu_compute_CGCMM_angle_forces_kernel(Scalar4* d_forc
 					//printf("\n\ntimestep = %i\nforce = %f\n",timestep,force_idx.x);
 					//printf("\n\ntimestep = %i\ncurangle_abc = %i\nidx = %i\nxidx = %i\nyidx = %i\nR1 = %f\nR2 = %f\nR3 = %f\nR4 = %f\nR5 = %f\nR6 = %f\nforce=%f",timestep,cur_angle_abc,idx,cur_angle_x_idx,cur_angle_y_idx,R1,R2,R3,R4,R5,R6,force_idx.x);
 					//printf("\ntimestep = %i\ncurangle_abc = %i\nidx = %i\nxidx = %i\nyidx = %i\nR1 = %i\nR2 = %i\nR3 = %i\nR4 = %i\nR5 = %i\nR6 = %i\n",timestep,cur_angle_abc,idx,cur_angle_x_idx,cur_angle_y_idx,R1,R2,R3,R4,R5,R6);
+					if (idx==70 && timestep<10)
+					{
+						//printf("forcew4=%f\n",force_idx.w);
+					}
+					if (idx==70 && timestep<10)
+					{
+						printf("forcex=%f forcey=%f forcez=%f counter=%i\n",force_idx.x,force_idx.y,force_idx.z,counter);
+					} 
 				}
-				d_force[idx] = force_idx;
 			}
+		}
+		force_idx.w += sqrt(force_idx.x*force_idx.x+force_idx.y*force_idx.y+force_idx.z*force_idx.z);
+		d_force[idx] = force_idx;
+		if (idx==70 && timestep<10)
+		{
+			printf("forcew5=%f  %f %f     %f\n\n",force_idx.x,force_idx.y,force_idx.z,force_idx.w);
 		}
 	}
     
