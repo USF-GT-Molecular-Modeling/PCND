@@ -11,7 +11,7 @@ many nodes. For more information, see the [HOOMD-blue website](http://glotzerlab
 mkdir build
 cd build
 cmake ../ -DCMAKE_INSTALL_PREFIX='/home/andrew/code/hoomd-installs/hoomd-blue_PCNDGPU_AsAngle/lib/python/' -DDISABLE_SQLITE=ON -DBUILD_CGCMM=ON -DBUILD_HPMC=OFF -DBUILD_METAL=OFF -DBUILD_TESTING=OFF -DENABLE_CUDA=ON -DSINGLE_PRECISION=ON -DENABLE_HPMC_MIXED_PRECISION=OFF -DBUILD_DEM=OFF -DUPDATE_SUBMODULES=OFF  -DCMAKE_CXX_COMPILER=/usr/bin/g++-5 -DCMAKE_C_COMPILER=/usr/bin/gcc-5
-make -j20
+make -j6
 ```
 #Compiling this version-LONI:
 
