@@ -5,6 +5,23 @@ of a variety of shape classes, and molecular dynamics simulations of particles w
 and other potentials. HOOMD-blue runs fast on NVIDIA GPUs, and can scale across
 many nodes. For more information, see the [HOOMD-blue website](http://glotzerlab.engin.umich.edu/hoomd-blue).
 
+#Compiling this version-Peters Group Workstations:
+
+```bash
+mkdir build
+cd build
+cmake ../ -DCMAKE_INSTALL_PREFIX='/home/andrew/code/hoomd-installs/hoomd-blue_PCNDGPU_AsAngle/lib/python/' -DDISABLE_SQLITE=ON -DBUILD_CGCMM=ON -DBUILD_HPMC=OFF -DBUILD_METAL=OFF -DBUILD_TESTING=OFF -DENABLE_CUDA=ON -DSINGLE_PRECISION=ON -DENABLE_HPMC_MIXED_PRECISION=OFF -DBUILD_DEM=OFF -DUPDATE_SUBMODULES=OFF  -DCMAKE_CXX_COMPILER=/usr/bin/g++-5 -DCMAKE_C_COMPILER=/usr/bin/gcc-5
+make -j20
+```
+#Compiling this version-LONI:
+
+```bash
+mkdir build
+cd build
+cmake ../ -DCMAKE_INSTALL_PREFIX='~/hoomd-installs/hoomd-blue_PCNDGPU_AsAngle/lib/python/' -DDISABLE_SQLITE=ON -DBUILD_CGCMM=ON -DBUILD_HPMC=OFF -DBUILD_METAL=OFF -DBUILD_TESTING=OFF -DENABLE_CUDA=ON -DENABLE_HPMC_MIXED_PRECISION=OFF -DBUILD_DEM=OFF -DENABLE_MPI=ON -DCMAKE_CXX_COMPILER=/usr/local/compilers/gcc/4.9.0/bin/g++ -DCMAKE_C_COMPILER=/usr/local/compilers/gcc/4.9.0/bin/gcc
+make -j20
+```
+
 # Tutorial
 
 [Read the HOOMD-blue tutorial online](http://nbviewer.jupyter.org/github/joaander/hoomd-examples/blob/master/index.ipynb).
