@@ -108,8 +108,8 @@ void CGCMMAngleForceComputeGPU::setParams(unsigned int type, Scalar K, Scalar t_
     cudaMalloc((void **)&devData, seed*sizeof(float));
     
     curandCreateGenerator(&gen,CURAND_RNG_PSEUDO_DEFAULT);
-    //curandSetPseudoRandomGeneratorSeed(gen,time(NULL));
-    curandSetPseudoRandomGeneratorSeed(gen,0);
+    curandSetPseudoRandomGeneratorSeed(gen,time(NULL));
+    //curandSetPseudoRandomGeneratorSeed(gen,0);
     
     //allocate space to carryover data
     /* Allocate n floats on host */
