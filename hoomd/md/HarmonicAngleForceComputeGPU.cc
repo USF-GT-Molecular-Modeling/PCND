@@ -1,4 +1,4 @@
-// Copyright (c) 2009-2017 The Regents of the University of Michigan
+// Copyright (c) 2009-2018 The Regents of the University of Michigan
 // This file is part of the HOOMD-blue project, released under the BSD 3-Clause License.
 
 
@@ -11,9 +11,6 @@
 
 
 #include "HarmonicAngleForceComputeGPU.h"
-#include "hoomd/Saru.h"
-#include <time.h>
-
 
 namespace py = pybind11;
 
@@ -34,9 +31,8 @@ HarmonicAngleForceComputeGPU::HarmonicAngleForceComputeGPU(std::shared_ptr<Syste
     // allocate and zero device memory
     GPUArray<Scalar2> params(m_angle_data->getNTypes(), m_exec_conf);
     m_params.swap(params);
-    m_tuner.reset(new Autotuner(32, 1024, 32, 5, 100000, "harmonic_angle", this->m_exec_conf));
 
-    
+    m_tuner.reset(new Autotuner(32, 1024, 32, 5, 100000, "harmonic_angle", this->m_exec_conf));
     }
 
 HarmonicAngleForceComputeGPU::~HarmonicAngleForceComputeGPU()
@@ -57,7 +53,6 @@ void HarmonicAngleForceComputeGPU::setParams(unsigned int type, Scalar K, Scalar
     ArrayHandle<Scalar2> h_params(m_params, access_location::host, access_mode::readwrite);
     // update the local copy of the memory
     h_params.data[type] = make_scalar2(K, t_0);
-    
     }
 
 /*! Internal method for computing the forces on the GPU.
@@ -85,31 +80,6 @@ void HarmonicAngleForceComputeGPU::computeForces(unsigned int timestep)
     ArrayHandle<unsigned int> d_gpu_angle_pos_list(m_angle_data->getGPUPosTable(), access_location::device,access_mode::read);
     ArrayHandle<unsigned int> d_gpu_n_angles(m_angle_data->getNGroupsArray(), access_location::device, access_mode::read);
 
-
-	
-	//hoomd::detail::Saru rng(time(0),timestep,rand());
-	//const unsigned int size = (unsigned int)m_angle_data->getN();
-	//GPUArray<Scalar> m_random (size*6,exec_conf);
-    //ArrayHandle<Scalar> d_random(m_random,access_location::host,access_mode::overwrite);
-    //for (unsigned int i = 0; i < size*6; i++)
-	//{
-		//printf("\nI = %i     R = %f\n",i,d_random.data[i]);
-	//}
-    
-    /*
-	//GPUArray<float> d_random;
-	for (unsigned int i = 0; i < size*6; i++)
-	{
-		d_random.data[i]=rng.s<Scalar>(0,1);
-		//printf("\ni = %i     R = %f\n",i,d_random.data[i]);
-		
-	}
-	* */
-	//d_random.data[0]=0;
-		
-		
-	//Scalar R1 = rng.s<Scalar>(0,1);
-
     // run the kernel on the GPU
     m_tuner->begin();
     gpu_compute_harmonic_angle_forces(d_force.data,
@@ -125,9 +95,7 @@ void HarmonicAngleForceComputeGPU::computeForces(unsigned int timestep)
                                       d_params.data,
                                       m_angle_data->getNTypes(),
                                       m_tuner->getParam(),
-                                      m_exec_conf->getComputeCapability(),
-                                      timestep);
-                                     
+                                      m_exec_conf->getComputeCapability());
 
     if(m_exec_conf->isCUDAErrorCheckingEnabled())
         CHECK_CUDA_ERROR();

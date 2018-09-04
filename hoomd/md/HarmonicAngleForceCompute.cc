@@ -1,4 +1,4 @@
-// Copyright (c) 2009-2017 The Regents of the University of Michigan
+// Copyright (c) 2009-2018 The Regents of the University of Michigan
 // This file is part of the HOOMD-blue project, released under the BSD 3-Clause License.
 
 
@@ -45,7 +45,6 @@ HarmonicAngleForceCompute::HarmonicAngleForceCompute(std::shared_ptr<SystemDefin
     // allocate the parameters
     m_K = new Scalar[m_angle_data->getNTypes()];
     m_t_0 = new Scalar[m_angle_data->getNTypes()];
-    
     }
 
 HarmonicAngleForceCompute::~HarmonicAngleForceCompute()
@@ -75,7 +74,6 @@ void HarmonicAngleForceCompute::setParams(unsigned int type, Scalar K, Scalar t_
 
     m_K[type] = K;
     m_t_0[type] = t_0;
-    
 
     // check for some silly errors a user could make
     if (K <= 0)
@@ -134,7 +132,7 @@ void HarmonicAngleForceCompute::computeForces(unsigned int timestep)
     assert(h_rtag.data);
 
     // Zero data for force calculation.
-    //memset((void*)h_force.data,0,sizeof(Scalar4)*m_force.getNumElements());
+    memset((void*)h_force.data,0,sizeof(Scalar4)*m_force.getNumElements());
     memset((void*)h_virial.data,0,sizeof(Scalar)*m_virial.getNumElements());
 
     // get a local copy of the simulation box too

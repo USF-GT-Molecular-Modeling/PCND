@@ -360,6 +360,23 @@ class Diagnostic(object):
         return FixItIterator(self)
 
     @property
+    def children(self):
+        class ChildDiagnosticsIterator:
+            def __init__(self, diag):
+                self.diag_set = conf.lib.clang_getChildDiagnostics(diag)
+
+            def __len__(self):
+                return int(conf.lib.clang_getNumDiagnosticsInSet(self.diag_set))
+
+            def __getitem__(self, key):
+                diag = conf.lib.clang_getDiagnosticInSet(self.diag_set, key)
+                if not diag:
+                    raise IndexError
+                return Diagnostic(diag)
+
+        return ChildDiagnosticsIterator(self)
+
+    @property
     def category_number(self):
         """The category number for this diagnostic or 0 if unavailable."""
         return conf.lib.clang_getDiagnosticCategory(self)
@@ -1067,6 +1084,126 @@ CursorKind.NULL_STMT = CursorKind(230)
 # Adaptor class for mixing declarations with statements and expressions.
 CursorKind.DECL_STMT = CursorKind(231)
 
+# OpenMP parallel directive.
+CursorKind.OMP_PARALLEL_DIRECTIVE = CursorKind(232)
+
+# OpenMP SIMD directive.
+CursorKind.OMP_SIMD_DIRECTIVE = CursorKind(233)
+
+# OpenMP for directive.
+CursorKind.OMP_FOR_DIRECTIVE = CursorKind(234)
+
+# OpenMP sections directive.
+CursorKind.OMP_SECTIONS_DIRECTIVE = CursorKind(235)
+
+# OpenMP section directive.
+CursorKind.OMP_SECTION_DIRECTIVE = CursorKind(236)
+
+# OpenMP single directive.
+CursorKind.OMP_SINGLE_DIRECTIVE = CursorKind(237)
+
+# OpenMP parallel for directive.
+CursorKind.OMP_PARALLEL_FOR_DIRECTIVE = CursorKind(238)
+
+# OpenMP parallel sections directive.
+CursorKind.OMP_PARALLEL_SECTIONS_DIRECTIVE = CursorKind(239)
+
+# OpenMP task directive.
+CursorKind.OMP_TASK_DIRECTIVE = CursorKind(240)
+
+# OpenMP master directive.
+CursorKind.OMP_MASTER_DIRECTIVE = CursorKind(241)
+
+# OpenMP critical directive.
+CursorKind.OMP_CRITICAL_DIRECTIVE = CursorKind(242)
+
+# OpenMP taskyield directive.
+CursorKind.OMP_TASKYIELD_DIRECTIVE = CursorKind(243)
+
+# OpenMP barrier directive.
+CursorKind.OMP_BARRIER_DIRECTIVE = CursorKind(244)
+
+# OpenMP taskwait directive.
+CursorKind.OMP_TASKWAIT_DIRECTIVE = CursorKind(245)
+
+# OpenMP flush directive.
+CursorKind.OMP_FLUSH_DIRECTIVE = CursorKind(246)
+
+# Windows Structured Exception Handling's leave statement.
+CursorKind.SEH_LEAVE_STMT = CursorKind(247)
+
+# OpenMP ordered directive.
+CursorKind.OMP_ORDERED_DIRECTIVE = CursorKind(248)
+
+# OpenMP atomic directive.
+CursorKind.OMP_ATOMIC_DIRECTIVE = CursorKind(249)
+
+# OpenMP for SIMD directive.
+CursorKind.OMP_FOR_SIMD_DIRECTIVE = CursorKind(250)
+
+# OpenMP parallel for SIMD directive.
+CursorKind.OMP_PARALLELFORSIMD_DIRECTIVE = CursorKind(251)
+
+# OpenMP target directive.
+CursorKind.OMP_TARGET_DIRECTIVE = CursorKind(252)
+
+# OpenMP teams directive.
+CursorKind.OMP_TEAMS_DIRECTIVE = CursorKind(253)
+
+# OpenMP taskgroup directive.
+CursorKind.OMP_TASKGROUP_DIRECTIVE = CursorKind(254)
+
+# OpenMP cancellation point directive.
+CursorKind.OMP_CANCELLATION_POINT_DIRECTIVE = CursorKind(255)
+
+# OpenMP cancel directive.
+CursorKind.OMP_CANCEL_DIRECTIVE = CursorKind(256)
+
+# OpenMP target data directive.
+CursorKind.OMP_TARGET_DATA_DIRECTIVE = CursorKind(257)
+
+# OpenMP taskloop directive.
+CursorKind.OMP_TASK_LOOP_DIRECTIVE = CursorKind(258)
+
+# OpenMP taskloop simd directive.
+CursorKind.OMP_TASK_LOOP_SIMD_DIRECTIVE = CursorKind(259)
+
+# OpenMP distribute directive.
+CursorKind.OMP_DISTRIBUTE_DIRECTIVE = CursorKind(260)
+
+# OpenMP target enter data directive.
+CursorKind.OMP_TARGET_ENTER_DATA_DIRECTIVE = CursorKind(261)
+
+# OpenMP target exit data directive.
+CursorKind.OMP_TARGET_EXIT_DATA_DIRECTIVE = CursorKind(262)
+
+# OpenMP target parallel directive.
+CursorKind.OMP_TARGET_PARALLEL_DIRECTIVE = CursorKind(263)
+
+# OpenMP target parallel for directive.
+CursorKind.OMP_TARGET_PARALLELFOR_DIRECTIVE = CursorKind(264)
+
+# OpenMP target update directive.
+CursorKind.OMP_TARGET_UPDATE_DIRECTIVE = CursorKind(265)
+
+# OpenMP distribute parallel for directive.
+CursorKind.OMP_DISTRIBUTE_PARALLELFOR_DIRECTIVE = CursorKind(266)
+
+# OpenMP distribute parallel for simd directive.
+CursorKind.OMP_DISTRIBUTE_PARALLEL_FOR_SIMD_DIRECTIVE = CursorKind(267)
+
+# OpenMP distribute simd directive.
+CursorKind.OMP_DISTRIBUTE_SIMD_DIRECTIVE = CursorKind(268)
+
+# OpenMP target parallel for simd directive.
+CursorKind.OMP_TARGET_PARALLEL_FOR_SIMD_DIRECTIVE = CursorKind(269)
+
+# OpenMP target simd directive.
+CursorKind.OMP_TARGET_SIMD_DIRECTIVE = CursorKind(270)
+
+# OpenMP teams distribute directive.
+CursorKind.OMP_TEAMS_DISTRIBUTE_DIRECTIVE = CursorKind(271)
+
 ###
 # Other Kinds
 
@@ -1100,6 +1237,11 @@ CursorKind.CUDAGLOBAL_ATTR = CursorKind(414)
 CursorKind.CUDAHOST_ATTR = CursorKind(415)
 CursorKind.CUDASHARED_ATTR = CursorKind(416)
 
+CursorKind.VISIBILITY_ATTR = CursorKind(417)
+
+CursorKind.DLLEXPORT_ATTR = CursorKind(418)
+CursorKind.DLLIMPORT_ATTR = CursorKind(419)
+
 ###
 # Preprocessing
 CursorKind.PREPROCESSING_DIRECTIVE = CursorKind(500)
@@ -1112,7 +1254,15 @@ CursorKind.INCLUSION_DIRECTIVE = CursorKind(503)
 
 # A module import declaration.
 CursorKind.MODULE_IMPORT_DECL = CursorKind(600)
+# A type alias template declaration
+CursorKind.TYPE_ALIAS_TEMPLATE_DECL = CursorKind(601)
+# A static_assert or _Static_assert node
+CursorKind.STATIC_ASSERT = CursorKind(602)
+# A friend declaration
+CursorKind.FRIEND_DECL = CursorKind(603)
 
+# A code completion overload candidate.
+CursorKind.OVERLOAD_CANDIDATE = CursorKind(700)
 
 ### Template Argument Kinds ###
 class TemplateArgumentKind(BaseEnumeration):
@@ -1162,11 +1312,61 @@ class Cursor(Structure):
         """
         return conf.lib.clang_isCursorDefinition(self)
 
+    def is_const_method(self):
+        """Returns True if the cursor refers to a C++ member function or member
+        function template that is declared 'const'.
+        """
+        return conf.lib.clang_CXXMethod_isConst(self)
+
+    def is_converting_constructor(self):
+        """Returns True if the cursor refers to a C++ converting constructor.
+        """
+        return conf.lib.clang_CXXConstructor_isConvertingConstructor(self)
+
+    def is_copy_constructor(self):
+        """Returns True if the cursor refers to a C++ copy constructor.
+        """
+        return conf.lib.clang_CXXConstructor_isCopyConstructor(self)
+
+    def is_default_constructor(self):
+        """Returns True if the cursor refers to a C++ default constructor.
+        """
+        return conf.lib.clang_CXXConstructor_isDefaultConstructor(self)
+
+    def is_move_constructor(self):
+        """Returns True if the cursor refers to a C++ move constructor.
+        """
+        return conf.lib.clang_CXXConstructor_isMoveConstructor(self)
+
+    def is_default_method(self):
+        """Returns True if the cursor refers to a C++ member function or member
+        function template that is declared '= default'.
+        """
+        return conf.lib.clang_CXXMethod_isDefaulted(self)
+
+    def is_mutable_field(self):
+        """Returns True if the cursor refers to a C++ field that is declared
+        'mutable'.
+        """
+        return conf.lib.clang_CXXField_isMutable(self)
+
+    def is_pure_virtual_method(self):
+        """Returns True if the cursor refers to a C++ member function or member
+        function template that is declared pure virtual.
+        """
+        return conf.lib.clang_CXXMethod_isPureVirtual(self)
+
     def is_static_method(self):
         """Returns True if the cursor refers to a C++ member function or member
         function template that is declared 'static'.
         """
         return conf.lib.clang_CXXMethod_isStatic(self)
+
+    def is_virtual_method(self):
+        """Returns True if the cursor refers to a C++ member function or member
+        function template that is declared 'virtual'.
+        """
+        return conf.lib.clang_CXXMethod_isVirtual(self)
 
     def get_definition(self):
         """
@@ -1655,6 +1855,8 @@ TypeKind.DEPENDENT = TypeKind(26)
 TypeKind.OBJCID = TypeKind(27)
 TypeKind.OBJCCLASS = TypeKind(28)
 TypeKind.OBJCSEL = TypeKind(29)
+TypeKind.FLOAT128 = TypeKind(30)
+TypeKind.HALF = TypeKind(31)
 TypeKind.COMPLEX = TypeKind(100)
 TypeKind.POINTER = TypeKind(101)
 TypeKind.BLOCKPOINTER = TypeKind(102)
@@ -1673,6 +1875,8 @@ TypeKind.INCOMPLETEARRAY = TypeKind(114)
 TypeKind.VARIABLEARRAY = TypeKind(115)
 TypeKind.DEPENDENTSIZEDARRAY = TypeKind(116)
 TypeKind.MEMBERPOINTER = TypeKind(117)
+TypeKind.AUTO = TypeKind(118)
+TypeKind.ELABORATED = TypeKind(119)
 
 class RefQualifierKind(BaseEnumeration):
     """Describes a specific ref-qualifier of a type."""
@@ -1871,6 +2075,11 @@ class Type(Structure):
         """
         return conf.lib.clang_Type_getClassType(self)
 
+    def get_named_type(self):
+        """
+        Retrieve the type named by the qualified-id.
+        """
+        return conf.lib.clang_Type_getNamedType(self)
     def get_align(self):
         """
         Retrieve the alignment of the record.
@@ -2357,7 +2566,7 @@ class TranslationUnit(ClangObject):
         functions above. __init__ is only called internally.
         """
         assert isinstance(index, Index)
-
+        self.index = index
         ClangObject.__init__(self, ptr)
 
     def __del__(self):
@@ -2677,6 +2886,11 @@ class CompileCommand(object):
         return conf.lib.clang_CompileCommand_getDirectory(self.cmd)
 
     @property
+    def filename(self):
+        """Get the working filename for this CompileCommand"""
+        return conf.lib.clang_CompileCommand_getFilename(self.cmd)
+
+    @property
     def arguments(self):
         """
         Get an iterable object providing each argument in the
@@ -2858,6 +3072,11 @@ functionList = [
    _CXString,
    _CXString.from_result),
 
+  ("clang_CompileCommand_getFilename",
+   [c_object_p],
+   _CXString,
+   _CXString.from_result),
+
   ("clang_CompileCommand_getNumArgs",
    [c_object_p],
    c_uint),
@@ -2882,6 +3101,34 @@ functionList = [
    [Index, c_char_p],
    c_object_p),
 
+  ("clang_CXXConstructor_isConvertingConstructor",
+   [Cursor],
+   bool),
+
+  ("clang_CXXConstructor_isCopyConstructor",
+   [Cursor],
+   bool),
+
+  ("clang_CXXConstructor_isDefaultConstructor",
+   [Cursor],
+   bool),
+
+  ("clang_CXXConstructor_isMoveConstructor",
+   [Cursor],
+   bool),
+
+  ("clang_CXXField_isMutable",
+   [Cursor],
+   bool),
+
+  ("clang_CXXMethod_isConst",
+   [Cursor],
+   bool),
+
+  ("clang_CXXMethod_isDefaulted",
+   [Cursor],
+   bool),
+
   ("clang_CXXMethod_isPureVirtual",
    [Cursor],
    bool),
@@ -2893,6 +3140,10 @@ functionList = [
   ("clang_CXXMethod_isVirtual",
    [Cursor],
    bool),
+
+  ("clang_defaultDiagnosticDisplayOptions",
+   [],
+   c_uint),
 
   ("clang_defaultSaveOptions",
    [TranslationUnit],
@@ -2935,6 +3186,10 @@ functionList = [
    [Type, Type],
    bool),
 
+  ("clang_formatDiagnostic",
+   [Diagnostic, c_uint],
+   _CXString),
+
   ("clang_getArgType",
    [Type, c_uint],
    Type,
@@ -2962,6 +3217,10 @@ functionList = [
    [Type],
    Type,
    Type.from_result),
+
+  ("clang_getChildDiagnostics",
+   [Diagnostic],
+   c_object_p),
 
   ("clang_getCompletionAvailability",
    [c_void_p],
@@ -3083,6 +3342,10 @@ functionList = [
    _CXString,
    _CXString.from_result),
 
+  ("clang_getDiagnosticInSet",
+   [c_object_p, c_uint],
+   c_object_p),
+
   ("clang_getDiagnosticLocation",
    [Diagnostic],
    SourceLocation),
@@ -3181,6 +3444,10 @@ functionList = [
    c_int),
 
   ("clang_getNumDiagnostics",
+   [c_object_p],
+   c_uint),
+
+  ("clang_getNumDiagnosticsInSet",
    [c_object_p],
    c_uint),
 
@@ -3400,9 +3667,9 @@ functionList = [
    [Cursor, c_uint],
    c_ulonglong),
 
-#  ("clang_Cursor_isAnonymous",
-#   [Cursor],
-#   bool),
+  ("clang_Cursor_isAnonymous",
+   [Cursor],
+   bool),
 
   ("clang_Cursor_isBitField",
    [Cursor],
@@ -3418,9 +3685,9 @@ functionList = [
    _CXString,
    _CXString.from_result),
 
-#  ("clang_Cursor_getOffsetOfField",
-#   [Cursor],
-#   c_longlong),
+  ("clang_Cursor_getOffsetOfField",
+   [Cursor],
+   c_longlong),
 
   ("clang_Type_getAlignOf",
    [Type],
@@ -3443,9 +3710,14 @@ functionList = [
    [Type],
    c_uint),
 
-#  ("clang_Type_visitFields",
-#   [Type, callbacks['fields_visit'], py_object],
-#   c_uint),
+  ("clang_Type_getNamedType",
+   [Type],
+   Type,
+   Type.from_result),
+
+  ("clang_Type_visitFields",
+   [Type, callbacks['fields_visit'], py_object],
+   c_uint),
 ]
 
 class LibclangError(Exception):
@@ -3492,7 +3764,7 @@ def register_functions(lib, ignore_errors):
 class Config:
     library_path = None
     library_file = None
-    compatibility_check = True
+    compatibility_check = False
     loaded = False
 
     @staticmethod
