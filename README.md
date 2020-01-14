@@ -5,6 +5,8 @@ of a variety of shape classes, and molecular dynamics simulations of particles w
 and other potentials. HOOMD-blue runs fast on NVIDIA GPUs, and can scale across
 many nodes. For more information, see the [HOOMD-blue website](http://glotzerlab.engin.umich.edu/hoomd-blue).
 
+This code consists of HOOMD-blue (not produce by us) with modifications to enable PCND for nanoparticles. 
+
 #Compiling this version-Peters Group Workstations:
 
 ```bash
